@@ -3,14 +3,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EmailNotionSync.FunctionApp;
 
-public class SyncEmails
+public class SyncEmails(ILoggerFactory loggerFactory)
 {
-    private readonly ILogger _logger;
-
-    public SyncEmails(ILoggerFactory loggerFactory)
-    {
-        _logger = loggerFactory.CreateLogger<SyncEmails>();
-    }
+    private readonly ILogger _logger = loggerFactory.CreateLogger<SyncEmails>();
 
     [Function("TimerTriggerSyncEmails")]
     public void Run([TimerTrigger("0 */5 * * * *")] TimerInfo myTimer)

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EmailNotionSync.ServiceDefaults")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8b161fe13512a55413673ba90afcde45e3034926")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+db8b0adc39f9d69b9e7ba5fae7dd237277ea0d09")]
 [assembly: System.Reflection.AssemblyProductAttribute("EmailNotionSync.ServiceDefaults")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EmailNotionSync.ServiceDefaults")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
