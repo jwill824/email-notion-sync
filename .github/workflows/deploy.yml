@@ -1,0 +1,41 @@
+name: "deploy-app-azure"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'EmailNotionSync/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore EmailNotionSync/EmailNotionSync.sln
+
+      - name: Build
+        run: dotnet build EmailNotionSync/EmailNotionSync.sln --no-restore --configuration Release
+
+      - name: Publish Function App
+        run: dotnet publish EmailNotionSync/EmailNotionSync.AppHost/EmailNotionSync.AppHost.csproj --configuration Release --output ./publish
+
+      - name: 'Deploy to Azure Function App'
+        uses: azure/functions-action@v1
+        with:
+          app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
+          package: ./publish
+        env:
+          AZURE_FUNCTIONAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
