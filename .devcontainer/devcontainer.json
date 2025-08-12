@@ -11,6 +11,9 @@
                 "8.0"
             ]
         },
+        "ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {
+            "version": "latest"
+        },
         "ghcr.io/devcontainers/features/github-cli:1": {},
         "ghcr.io/devcontainers/features/node:1": {},
         "ghcr.io/dhoeric/features/terraform-docs:1": {}
