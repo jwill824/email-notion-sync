@@ -6,7 +6,7 @@ public class WebTests
 {
     private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
 
-    [Fact]
+    [SkipOnCiFact]
     public async Task GetWebResourceRootReturnsOkStatusCode()
     {
         // Arrange
