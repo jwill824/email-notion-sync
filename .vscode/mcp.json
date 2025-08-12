@@ -1,0 +1,65 @@
+{
+    "servers": {
+        "notion": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@notionhq/notion-mcp-server"
+            ],
+            "env": {
+                "OPENAPI_MCP_HEADERS": "{\"Authorization\":\"Bearer ${input:NOTION_TOKEN}\",\"Notion-Version\":\"2022-06-28\"}"
+            },
+            "type": "stdio"
+        },
+        "memory": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-memory"
+            ],
+            "env": {
+                "MEMORY_FILE_PATH": "${input:memory_file_path}"
+            },
+            "type": "stdio"
+        },
+        "sequentialthinking": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-sequential-thinking"
+            ]
+        },
+        "terraform": {
+            "command": "docker",
+            "args": [
+                "run",
+                "-i",
+                "--rm",
+                "hashicorp/terraform-mcp-server"
+            ]
+        },
+        "azure": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@azure/mcp@latest",
+                "server",
+                "start"
+            ]
+        }
+    },
+    "inputs": [
+        {
+            "id": "NOTION_TOKEN",
+            "type": "promptString",
+            "description": "Notion API Token (https://www.notion.so/profile/integrations)",
+            "password": true
+        },
+        {
+            "id": "memory_file_path",
+            "type": "promptString",
+            "description": "Path to the memory storage file (optional)",
+            "password": false
+        }
+    ]
+}

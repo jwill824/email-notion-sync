@@ -1,0 +1,48 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.0.0
+MinimumVisualStudioVersion = 17.8.0.0
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailNotionSync.AppHost", "EmailNotionSync.AppHost\EmailNotionSync.AppHost.csproj", "{763FD367-EECA-41AD-ABC8-49090E2BFD31}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailNotionSync.ServiceDefaults", "EmailNotionSync.ServiceDefaults\EmailNotionSync.ServiceDefaults.csproj", "{97548F15-5C0F-42E6-89B9-1B2345A63277}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailNotionSync.ApiService", "EmailNotionSync.ApiService\EmailNotionSync.ApiService.csproj", "{184370E2-28F7-4255-912E-F481CC86C884}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailNotionSync.Tests", "EmailNotionSync.Tests\EmailNotionSync.Tests.csproj", "{1ED3EB5B-F2BE-4986-89BB-50201FF8DC83}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailNotionSync.Web", "EmailNotionSync.Web\EmailNotionSync.Web.csproj", "{5CEFE3B7-4FE2-4C02-B978-E84FF160CCF0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{763FD367-EECA-41AD-ABC8-49090E2BFD31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{763FD367-EECA-41AD-ABC8-49090E2BFD31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{763FD367-EECA-41AD-ABC8-49090E2BFD31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{763FD367-EECA-41AD-ABC8-49090E2BFD31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97548F15-5C0F-42E6-89B9-1B2345A63277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97548F15-5C0F-42E6-89B9-1B2345A63277}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97548F15-5C0F-42E6-89B9-1B2345A63277}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97548F15-5C0F-42E6-89B9-1B2345A63277}.Release|Any CPU.Build.0 = Release|Any CPU
+		{184370E2-28F7-4255-912E-F481CC86C884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{184370E2-28F7-4255-912E-F481CC86C884}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{184370E2-28F7-4255-912E-F481CC86C884}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{184370E2-28F7-4255-912E-F481CC86C884}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ED3EB5B-F2BE-4986-89BB-50201FF8DC83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ED3EB5B-F2BE-4986-89BB-50201FF8DC83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ED3EB5B-F2BE-4986-89BB-50201FF8DC83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ED3EB5B-F2BE-4986-89BB-50201FF8DC83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CEFE3B7-4FE2-4C02-B978-E84FF160CCF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CEFE3B7-4FE2-4C02-B978-E84FF160CCF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CEFE3B7-4FE2-4C02-B978-E84FF160CCF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CEFE3B7-4FE2-4C02-B978-E84FF160CCF0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A88DCF90-C0F6-45FC-8C37-1948527A5C5D}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,168 @@
+{
+  "format": 1,
+  "restore": {
+    "/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.Tests/EmailNotionSync.Tests.csproj": {}
+  },
+  "projects": {
+    "/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.AppHost/EmailNotionSync.AppHost.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.AppHost/EmailNotionSync.AppHost.csproj",
+        "projectName": "EmailNotionSync.AppHost",
+        "projectPath": "/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.AppHost/EmailNotionSync.AppHost.csproj",
+        "packagesPath": "/home/vscode/.nuget/packages/",
+        "outputPath": "/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.AppHost/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/vscode/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Aspire.Dashboard.Sdk.linux-arm64": {
+              "target": "Package",
+              "version": "[9.4.0, )",
+              "autoReferenced": true
+            },
+            "Aspire.Hosting.AppHost": {
+              "target": "Package",
+              "version": "[9.4.0, )"
+            },
+            "Aspire.Hosting.Orchestration.linux-arm64": {
+              "target": "Package",
+              "version": "[9.4.0, )",
+              "autoReferenced": true
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.303/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.Tests/EmailNotionSync.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.Tests/EmailNotionSync.Tests.csproj",
+        "projectName": "EmailNotionSync.Tests",
+        "projectPath": "/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.Tests/EmailNotionSync.Tests.csproj",
+        "packagesPath": "/home/vscode/.nuget/packages/",
+        "outputPath": "/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.Tests/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/vscode/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.AppHost/EmailNotionSync.AppHost.csproj": {
+                "projectPath": "/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.AppHost/EmailNotionSync.AppHost.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Aspire.Hosting.Testing": {
+              "target": "Package",
+              "version": "[9.4.0, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.10.0, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[6.0.2, )"
+            },
+            "xunit.runner.visualstudio": {
+              "target": "Package",
+              "version": "[3.0.2, )"
+            },
+            "xunit.v3": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.303/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/bin/Debug/net9.0/EmailNotionSync.ServiceDefaults.deps.json
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/bin/Debug/net9.0/EmailNotionSync.ServiceDefaults.dll
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/bin/Debug/net9.0/EmailNotionSync.ServiceDefaults.pdb
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/obj/Debug/net9.0/EmailNotionSync.ServiceDefaults.csproj.AssemblyReference.cache
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/obj/Debug/net9.0/EmailNotionSync.ServiceDefaults.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/obj/Debug/net9.0/EmailNotionSync.ServiceDefaults.AssemblyInfoInputs.cache
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/obj/Debug/net9.0/EmailNotionSync.ServiceDefaults.AssemblyInfo.cs
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/obj/Debug/net9.0/EmailNotionSync.ServiceDefaults.csproj.CoreCompileInputs.cache
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/obj/Debug/net9.0/EmailNotionSync.ServiceDefaults.dll
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/obj/Debug/net9.0/refint/EmailNotionSync.ServiceDefaults.dll
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/obj/Debug/net9.0/EmailNotionSync.ServiceDefaults.pdb
+/workspaces/email-notion-sync/EmailNotionSync/EmailNotionSync.ServiceDefaults/obj/Debug/net9.0/ref/EmailNotionSync.ServiceDefaults.dll

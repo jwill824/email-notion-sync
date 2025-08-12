@@ -1,0 +1,1 @@
+curl -sSL https://aspire.dev/install.sh | bash

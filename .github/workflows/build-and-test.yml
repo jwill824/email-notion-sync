@@ -1,0 +1,31 @@
+name: "build-and-test"
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore EmailNotionSync/EmailNotionSync.sln
+
+      - name: Build
+        run: dotnet build EmailNotionSync/EmailNotionSync.sln --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test EmailNotionSync/EmailNotionSync.sln --no-build --configuration Release --logger trx
