@@ -3,11 +3,11 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.0.0"
+      version = ">= 3.75.0"
     }
   }
   cloud {
-    organization = "YOUR_TERRAFORM_CLOUD_ORG"
+    organization = "Thingstead"
     workspaces {
       name = "email-notion-sync"
     }
