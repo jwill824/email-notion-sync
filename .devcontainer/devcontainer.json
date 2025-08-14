@@ -35,7 +35,9 @@
                 "ms-vscode.powershell",
                 "ms-vscode.vscode-node-azure-pack",
                 "TimHeuer.aspire-gen",
-                "microsoft-aspire.aspire-vscode"
+                "microsoft-aspire.aspire-vscode",
+                "EditorConfig.EditorConfig",
+                "Azurite.azurite"
             ],
             "settings": {
                 "azure-dev.auth.useIntegratedAuth": true,
