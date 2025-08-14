@@ -5,7 +5,7 @@ EXPOSE 8080
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY ["EmailNotionSync.NotionApi/EmailNotionSync.NotionApi.csproj", "./"]
+COPY ["EmailNotionSync.NotionApi.csproj", "./"]
 RUN dotnet restore "./EmailNotionSync.NotionApi.csproj"
 COPY . .
 RUN dotnet publish "./EmailNotionSync.NotionApi.csproj" -c Release -o /app/publish
