@@ -57,3 +57,89 @@ resource "azurerm_key_vault" "main" {
 }
 
 data "azurerm_client_config" "current" {}
+
+# Container Apps Environment
+resource "azurerm_container_app_environment" "main" {
+  name                = "${var.project_name}-cae"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+}
+
+# GmailApi Container App
+resource "azurerm_container_app" "gmailapi" {
+  name                         = var.gmail_api_name
+  container_app_environment_id = azurerm_container_app_environment.main.id
+  resource_group_name          = azurerm_resource_group.main.name
+  revision_mode                = "Single"
+  identity {
+    type = "SystemAssigned"
+  }
+  ingress {
+    external_enabled = true
+    target_port      = 8080
+    traffic_weight {
+      latest_revision = true
+      percentage      = 100
+    }
+  }
+  template {
+    container {
+      name   = "gmailapi"
+      image  = var.gmail_api_image
+      cpu    = 0.5
+      memory = "1Gi"
+      env {
+        name  = "ASPNETCORE_ENVIRONMENT"
+        value = "Production"
+      }
+      # Add more env vars as needed
+    }
+  }
+}
+
+# NotionApi Container App
+resource "azurerm_container_app" "notionapi" {
+  name                         = var.notion_api_name
+  container_app_environment_id = azurerm_container_app_environment.main.id
+  resource_group_name          = azurerm_resource_group.main.name
+  revision_mode                = "Single"
+  identity {
+    type = "SystemAssigned"
+  }
+  ingress {
+    external_enabled = true
+    target_port      = 8080
+    traffic_weight {
+      latest_revision = true
+      percentage      = 100
+    }
+  }
+  template {
+    container {
+      name   = "notionapi"
+      image  = var.notion_api_image
+      cpu    = 0.5
+      memory = "1Gi"
+      env {
+        name  = "ASPNETCORE_ENVIRONMENT"
+        value = "Production"
+      }
+      # Add more env vars as needed
+    }
+  }
+}
+
+# Key Vault access for APIs
+resource "azurerm_key_vault_access_policy" "gmailapi" {
+  key_vault_id       = azurerm_key_vault.main.id
+  tenant_id          = data.azurerm_client_config.current.tenant_id
+  object_id          = azurerm_container_app.gmailapi.identity[0].principal_id
+  secret_permissions = ["Get", "List"]
+}
+
+resource "azurerm_key_vault_access_policy" "notionapi" {
+  key_vault_id       = azurerm_key_vault.main.id
+  tenant_id          = data.azurerm_client_config.current.tenant_id
+  object_id          = azurerm_container_app.notionapi.identity[0].principal_id
+  secret_permissions = ["Get", "List"]
+}

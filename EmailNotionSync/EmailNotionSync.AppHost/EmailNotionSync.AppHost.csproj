@@ -11,8 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EmailNotionSync.ApiService\EmailNotionSync.ApiService.csproj" />
-    <ProjectReference Include="..\EmailNotionSync.Web\EmailNotionSync.Web.csproj" />
+    <ProjectReference Include="..\EmailNotionSync.FunctionApp\EmailNotionSync.FunctionApp.csproj" />
+    <ProjectReference Include="..\EmailNotionSync.GmailApi\EmailNotionSync.GmailApi.csproj" />
+    <ProjectReference Include="..\EmailNotionSync.NotionApi\EmailNotionSync.NotionApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

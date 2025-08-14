@@ -22,3 +22,32 @@ variable "key_vault_name" {
   type        = string
   default     = "emailnotionsynckv"
 }
+
+# Container Apps variables
+variable "project_name" {
+  description = "Project name prefix for resources"
+  type        = string
+  default     = "emailnotionsync"
+}
+
+variable "gmail_api_name" {
+  description = "Name of the GmailApi Container App"
+  type        = string
+  default     = "gmailapi"
+}
+
+variable "gmail_api_image" {
+  description = "Container image for GmailApi"
+  type        = string
+}
+
+variable "notion_api_name" {
+  description = "Name of the NotionApi Container App"
+  type        = string
+  default     = "notionapi"
+}
+
+variable "notion_api_image" {
+  description = "Container image for NotionApi"
+  type        = string
+}

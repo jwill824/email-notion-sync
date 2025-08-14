@@ -1,6 +1,11 @@
 {
     "name": "Email Notion Sync Workspace",
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "runArgs": [
+        "--platform=linux/amd64"
+    ],
     "features": {
         "ghcr.io/devcontainers/features/terraform:1": {},
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},

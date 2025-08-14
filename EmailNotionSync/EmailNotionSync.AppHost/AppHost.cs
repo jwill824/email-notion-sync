@@ -1,12 +1,13 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var apiService = builder.AddProject<Projects.EmailNotionSync_ApiService>("apiservice")
-    .WithHttpHealthCheck("/health");
+var gmailApi = builder.AddProject<Projects.EmailNotionSync_GmailApi>("gmailapi")
+    .WithHttpEndpoint(port: 5001);
 
-builder.AddProject<Projects.EmailNotionSync_Web>("webfrontend")
-    .WithExternalHttpEndpoints()
-    .WithHttpHealthCheck("/health")
-    .WithReference(apiService)
-    .WaitFor(apiService);
+var notionApi = builder.AddProject<Projects.EmailNotionSync_NotionApi>("notionapi")
+    .WithHttpEndpoint(port: 5002);
+
+builder.AddProject<Projects.EmailNotionSync_FunctionApp>("functionapp")
+    .WithReference(gmailApi)
+    .WithReference(notionApi);
 
 builder.Build().Run();
