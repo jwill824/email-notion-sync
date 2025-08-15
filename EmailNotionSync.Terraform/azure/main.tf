@@ -31,23 +31,19 @@ resource "azurerm_storage_account" "main" {
   account_replication_type = "LRS"
 }
 
-resource "azurerm_app_service_plan" "main" {
+resource "azurerm_service_plan" "main" {
   name                = "${var.function_app_name}-plan"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  kind                = "FunctionApp"
-  reserved            = true
-  sku {
-    tier = "Dynamic"
-    size = "Y1"
-  }
+  sku_name            = "Y1"
+  os_type             = "Linux"
 }
 
 resource "azurerm_linux_function_app" "main" {
   name                       = var.function_app_name
   location                   = azurerm_resource_group.main.location
   resource_group_name        = azurerm_resource_group.main.name
-  service_plan_id            = azurerm_app_service_plan.main.id
+  service_plan_id            = azurerm_service_plan.main.id
   storage_account_name       = azurerm_storage_account.main.name
   storage_account_access_key = azurerm_storage_account.main.primary_access_key
   identity {
