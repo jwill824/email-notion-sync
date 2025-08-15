@@ -35,8 +35,6 @@ resource "azurerm_service_plan" "main" {
   name                = "${var.function_app_name}-plan"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  kind                = "FunctionApp"
-  reserved            = true
   sku_name            = "Y1"
   os_type             = "Linux"
 }
