@@ -4,28 +4,10 @@ variable "location" {
   default     = "East US"
 }
 
-variable "resource_group_name" {
-  description = "Name of the resource group"
-  type        = string
-  default     = "email-notion-sync-rg"
-}
-
-variable "function_app_name" {
-  description = "Name of the Azure Function App"
-  type        = string
-  default     = "emailnotionsyncfunc"
-}
-
-variable "key_vault_name" {
-  description = "Name of the Azure Key Vault"
-  type        = string
-  default     = "emailnotionsynckv"
-}
-
 variable "project_name" {
   description = "Project name prefix for resources"
   type        = string
-  default     = "emailnotionsync"
+  default     = "email-notion-sync"
 }
 
 variable "gmail_api_name" {
@@ -48,12 +30,6 @@ variable "notion_api_name" {
 variable "notion_api_image" {
   description = "Container image for NotionApi"
   type        = string
-}
-
-variable "app_insights_name" {
-  description = "Name of the Application Insights resource"
-  type        = string
-  default     = "email-notion-sync-ai"
 }
 
 variable "gmail_api_key" {
