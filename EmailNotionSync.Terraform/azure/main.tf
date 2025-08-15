@@ -19,12 +19,12 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "main" {
-  name     = var.resource_group_name
+  name     = "${var.project_name}-rg"
   location = var.location
 }
 
 resource "azurerm_storage_account" "main" {
-  name                     = "${var.function_app_name}-sa"
+  name                     = "${var.project_name}-sa"
   resource_group_name      = azurerm_resource_group.main.name
   location                 = azurerm_resource_group.main.location
   account_tier             = "Standard"
@@ -32,7 +32,7 @@ resource "azurerm_storage_account" "main" {
 }
 
 resource "azurerm_service_plan" "main" {
-  name                = "${var.function_app_name}-plan"
+  name                = "${var.project_name}-plan"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   sku_name            = "Y1"
@@ -40,7 +40,7 @@ resource "azurerm_service_plan" "main" {
 }
 
 resource "azurerm_linux_function_app" "main" {
-  name                       = var.function_app_name
+  name                       = "${var.project_name}-func"
   location                   = azurerm_resource_group.main.location
   resource_group_name        = azurerm_resource_group.main.name
   service_plan_id            = azurerm_service_plan.main.id
@@ -61,7 +61,7 @@ resource "azurerm_linux_function_app" "main" {
 }
 
 resource "azurerm_key_vault" "main" {
-  name                     = var.key_vault_name
+  name                     = "${var.project_name}-kv"
   location                 = azurerm_resource_group.main.location
   resource_group_name      = azurerm_resource_group.main.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
