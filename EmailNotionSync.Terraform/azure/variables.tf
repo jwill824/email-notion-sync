@@ -25,7 +25,7 @@ variable "key_vault_name" {
 variable "project_name" {
   description = "Project name prefix for resources"
   type        = string
-  default     = "emailnotionsync"
+  default     = "email-notion-sync"
 }
 
 variable "gmail_api_name" {
@@ -48,12 +48,6 @@ variable "notion_api_name" {
 variable "notion_api_image" {
   description = "Container image for NotionApi"
   type        = string
-}
-
-variable "app_insights_name" {
-  description = "Name of the Application Insights resource"
-  type        = string
-  default     = "email-notion-sync-ai"
 }
 
 variable "gmail_api_key" {

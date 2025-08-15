@@ -24,7 +24,7 @@ resource "azurerm_resource_group" "main" {
 }
 
 resource "azurerm_storage_account" "main" {
-  name                     = "${var.function_app_name}sa"
+  name                     = "${var.function_app_name}-sa"
   resource_group_name      = azurerm_resource_group.main.name
   location                 = azurerm_resource_group.main.location
   account_tier             = "Standard"
@@ -157,7 +157,7 @@ resource "azurerm_key_vault_access_policy" "notionapi" {
 }
 
 resource "azurerm_application_insights" "main" {
-  name                = var.app_insights_name
+  name                = "${var.project_name}-ai"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   application_type    = "web"
