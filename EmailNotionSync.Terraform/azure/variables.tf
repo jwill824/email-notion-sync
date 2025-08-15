@@ -1,4 +1,3 @@
-# Variables for Azure Function App and Key Vault
 variable "location" {
   description = "Azure region to deploy resources"
   type        = string
@@ -23,7 +22,6 @@ variable "key_vault_name" {
   default     = "emailnotionsynckv"
 }
 
-# Container Apps variables
 variable "project_name" {
   description = "Project name prefix for resources"
   type        = string
@@ -50,4 +48,22 @@ variable "notion_api_name" {
 variable "notion_api_image" {
   description = "Container image for NotionApi"
   type        = string
+}
+
+variable "app_insights_name" {
+  description = "Name of the Application Insights resource"
+  type        = string
+  default     = "email-notion-sync-ai"
+}
+
+variable "gmail_api_key" {
+  description = "Gmail API key secret value"
+  type        = string
+  sensitive   = true
+}
+
+variable "notion_api_key" {
+  description = "Notion API key secret value"
+  type        = string
+  sensitive   = true
 }
