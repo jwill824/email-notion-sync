@@ -35,6 +35,8 @@ jobs:
 
       - name: Build and push ${{ matrix.api.name }} image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ matrix.api.name }}:latest
-          docker build -t $IMAGE_NAME ./${{ matrix.api.path }}
-          docker push $IMAGE_NAME
+            IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ matrix.api.name }}:latest
+            docker build -t $IMAGE_NAME \
+            --file ./${{ matrix.api.path }}/Dockerfile \
+            .
+            docker push $IMAGE_NAME
