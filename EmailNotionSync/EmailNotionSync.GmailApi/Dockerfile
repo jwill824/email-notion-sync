@@ -16,7 +16,7 @@ RUN dotnet restore "./EmailNotionSync.GmailApi/EmailNotionSync.GmailApi.csproj"
 COPY EmailNotionSync/EmailNotionSync.GmailApi/. ./EmailNotionSync.GmailApi/
 COPY EmailNotionSync/EmailNotionSync.ServiceDefaults/. ./EmailNotionSync.ServiceDefaults/
 
-RUN dotnet publish "EmailNotionSync/EmailNotionSync.GmailApi/EmailNotionSync.GmailApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "./EmailNotionSync.GmailApi/EmailNotionSync.GmailApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
