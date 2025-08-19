@@ -6,12 +6,11 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy solution and project files first (restore needs them)
-COPY EmailNotionSync/EmailNotionSync.sln ./
+# Copy project files first (restore only this project)
 COPY EmailNotionSync/EmailNotionSync.GmailApi/EmailNotionSync.GmailApi.csproj ./EmailNotionSync.GmailApi/
 COPY EmailNotionSync/EmailNotionSync.ServiceDefaults/EmailNotionSync.ServiceDefaults.csproj ./EmailNotionSync.ServiceDefaults/
 
-RUN dotnet restore "EmailNotionSync.sln"
+RUN dotnet restore "./EmailNotionSync.GmailApi/EmailNotionSync.GmailApi.csproj"
 
 # Copy full source for the projects we need
 COPY EmailNotionSync/EmailNotionSync.GmailApi/. ./EmailNotionSync.GmailApi/
