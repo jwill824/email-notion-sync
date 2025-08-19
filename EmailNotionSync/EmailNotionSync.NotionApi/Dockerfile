@@ -5,8 +5,7 @@ EXPOSE 8080
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY EmailNotionSync/EmailNotionSync.NotionApi/EmailNotionSync.NotionApi.csproj ./
-COPY EmailNotionSync/EmailNotionSync.ServiceDefaults/EmailNotionSync.ServiceDefaults.csproj ./EmailNotionSync.ServiceDefaults/
+COPY EmailNotionSync/EmailNotionSync.NotionApi/EmailNotionApi.csproj ./
 RUN dotnet restore "./EmailNotionSync.NotionApi.csproj"
 COPY EmailNotionSync/EmailNotionSync.NotionApi/. .
 COPY EmailNotionSync/EmailNotionSync.ServiceDefaults ./EmailNotionSync.ServiceDefaults

@@ -24,3 +24,24 @@ variable "azure_functionapp_publish_profile" {
   type        = string
   sensitive   = true
 }
+
+variable "azure_credentials" {
+  description = "Azure credentials for login action (JSON)"
+  type        = string
+  sensitive   = true
+}
+
+variable "azure_gmailapi_app_name" {
+  description = "Azure GmailApi Container App name"
+  type        = string
+}
+
+variable "azure_notionapi_app_name" {
+  description = "Azure NotionApi Container App name"
+  type        = string
+}
+
+variable "azure_resource_group" {
+  description = "Azure Resource Group name"
+  type        = string
+}
