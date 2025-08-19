@@ -8,7 +8,6 @@ WORKDIR /src
 COPY EmailNotionSync/EmailNotionSync.NotionApi/EmailNotionApi.csproj ./
 RUN dotnet restore "./EmailNotionSync.NotionApi.csproj"
 COPY EmailNotionSync/EmailNotionSync.NotionApi/. .
-COPY EmailNotionSync/EmailNotionSync.ServiceDefaults ./EmailNotionSync.ServiceDefaults
 RUN dotnet publish "./EmailNotionSync.NotionApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
