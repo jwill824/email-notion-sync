@@ -37,7 +37,9 @@
                 "TimHeuer.aspire-gen",
                 "microsoft-aspire.aspire-vscode",
                 "EditorConfig.EditorConfig",
-                "Azurite.azurite"
+                "Azurite.azurite",
+                "ms-azuretools.vscode-azureterraform",
+                "donjayamanne.githistory"
             ],
             "settings": {
                 "azure-dev.auth.useIntegratedAuth": true,
