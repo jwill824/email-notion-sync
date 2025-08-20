@@ -40,8 +40,6 @@ resource "azurerm_service_plan" "main" {
   # when creating Y1 service plans. Using B1 with reserved=true and kind="FunctionApp"
   # avoids the Dynamic VMs quota requirement.
   sku_name = "B1"
-  kind     = "FunctionApp"
-  reserved = true
   os_type  = "Linux"
 }
 
