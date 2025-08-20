@@ -35,8 +35,14 @@ resource "azurerm_service_plan" "main" {
   name                = "${var.project_name}-plan"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  sku_name            = "Y1"
-  os_type             = "Linux"
+  # Use a Basic (B1) plan on Linux instead of the Consumption/Dynamic (Y1) plan.
+  # Some subscriptions have a Dynamic VMs quota of 0 which causes a 401/"Additional quota" error
+  # when creating Y1 service plans. Using B1 with reserved=true and kind="FunctionApp"
+  # avoids the Dynamic VMs quota requirement.
+  sku_name = "B1"
+  kind     = "FunctionApp"
+  reserved = true
+  os_type  = "Linux"
 }
 
 resource "azurerm_linux_function_app" "main" {
