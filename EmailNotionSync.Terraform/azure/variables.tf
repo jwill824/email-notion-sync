@@ -13,7 +13,7 @@ variable "project_name" {
 variable "gmail_api_name" {
   description = "Name of the GmailApi Container App"
   type        = string
-  default     = "gmailapi"
+  default     = "gmail-api"
 }
 
 variable "gmail_api_image" {
@@ -24,7 +24,7 @@ variable "gmail_api_image" {
 variable "notion_api_name" {
   description = "Name of the NotionApi Container App"
   type        = string
-  default     = "notionapi"
+  default     = "notion-api"
 }
 
 variable "notion_api_image" {
