@@ -183,3 +183,23 @@ resource "azurerm_key_vault_secret" "notion_api_key" {
   value        = var.notion_api_key
   key_vault_id = azurerm_key_vault.main.id
 }
+
+resource "azurerm_linux_function_app_slot" "staging" {
+  name            = "staging"
+  function_app_id = azurerm_linux_function_app.main.id
+
+  app_settings = {
+    FUNCTIONS_WORKER_RUNTIME = "dotnet"
+    AzureWebJobsStorage      = azurerm_storage_account.main.primary_connection_string
+  }
+
+  site_config {
+    application_stack {
+      dotnet_version = "8.0"
+    }
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
