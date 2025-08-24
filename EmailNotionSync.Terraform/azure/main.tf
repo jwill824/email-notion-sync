@@ -67,11 +67,6 @@ resource "azurerm_key_vault" "main" {
   tenant_id                = data.azurerm_client_config.current.tenant_id
   sku_name                 = "standard"
   purge_protection_enabled = true
-  access_policy {
-    tenant_id          = data.azurerm_client_config.current.tenant_id
-    object_id          = azurerm_linux_function_app.main.identity[0].principal_id
-    secret_permissions = ["Get", "List"]
-  }
 }
 
 data "azurerm_client_config" "current" {}
@@ -153,6 +148,13 @@ resource "azurerm_key_vault_access_policy" "notion_api" {
   key_vault_id       = azurerm_key_vault.main.id
   tenant_id          = data.azurerm_client_config.current.tenant_id
   object_id          = azurerm_container_app.notion_api.identity[0].principal_id
+  secret_permissions = ["Get", "List"]
+}
+
+resource "azurerm_key_vault_access_policy" "function_app" {
+  key_vault_id       = azurerm_key_vault.main.id
+  tenant_id          = data.azurerm_client_config.current.tenant_id
+  object_id          = azurerm_linux_function_app.main.identity[0].principal_id
   secret_permissions = ["Get", "List"]
 }
 
