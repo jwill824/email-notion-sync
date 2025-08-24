@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 3.75.0"
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = ">= 2.0.0"
+    }
   }
   cloud {
     organization = "Thingstead"
@@ -18,8 +22,12 @@ provider "azurerm" {
   features {}
 }
 
+provider "azuread" {
+  tenant_id = data.azurerm_client_config.current.tenant_id
+}
+
 resource "azurerm_resource_group" "main" {
-  name     = "${var.project_name}-rg"
+  name     = "${var.github_repo}-rg"
   location = var.location
 }
 
@@ -32,7 +40,7 @@ resource "azurerm_storage_account" "main" {
 }
 
 resource "azurerm_service_plan" "main" {
-  name                = "${var.project_name}-plan"
+  name                = "${var.github_repo}-plan"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   sku_name            = "Y1"
@@ -40,7 +48,7 @@ resource "azurerm_service_plan" "main" {
 }
 
 resource "azurerm_linux_function_app" "main" {
-  name                       = "${var.project_name}-func"
+  name                       = "${var.github_repo}-func"
   location                   = azurerm_resource_group.main.location
   resource_group_name        = azurerm_resource_group.main.name
   service_plan_id            = azurerm_service_plan.main.id
@@ -61,7 +69,7 @@ resource "azurerm_linux_function_app" "main" {
 }
 
 resource "azurerm_key_vault" "main" {
-  name                     = "${var.project_name}-kv"
+  name                     = "${var.github_repo}-kv"
   location                 = azurerm_resource_group.main.location
   resource_group_name      = azurerm_resource_group.main.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
@@ -71,8 +79,34 @@ resource "azurerm_key_vault" "main" {
 
 data "azurerm_client_config" "current" {}
 
+resource "azuread_application" "github_oidc_app" {
+  display_name = "email-notion-sync-github-oidc"
+}
+
+resource "azuread_service_principal" "github_oidc_sp" {
+  client_id = azuread_application.github_oidc_app.client_id
+}
+
+resource "azuread_application_federated_identity_credential" "github_actions_credential" {
+  application_id = azuread_application.github_oidc_app.client_id
+  display_name   = "github-actions-main-oidc"
+  issuer         = "https://token.actions.githubusercontent.com"
+  subject        = "repo:${var.github_owner}/${var.github_repo}:ref:refs/heads/main"
+  audiences      = ["api://AzureADTokenExchange"]
+}
+
+resource "azurerm_role_assignment" "sp_rg_contributor" {
+  scope                = azurerm_resource_group.main.id
+  role_definition_name = "Contributor"
+  principal_id         = azuread_service_principal.github_oidc_sp.id
+}
+
+output "oidc_client_id" {
+  value = azuread_application.github_oidc_app.client_id
+}
+
 resource "azurerm_container_app_environment" "main" {
-  name                = "${var.project_name}-cae"
+  name                = "${var.github_repo}-cae"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 }
@@ -166,7 +200,7 @@ resource "azurerm_key_vault_access_policy" "hcp_sp" {
 }
 
 resource "azurerm_application_insights" "main" {
-  name                = "${var.project_name}-ai"
+  name                = "${var.github_repo}-ai"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   application_type    = "web"
