@@ -43,3 +43,8 @@ variable "notion_api_key" {
   type        = string
   sensitive   = true
 }
+
+variable "hcp_sp_object_id" {
+  description = "Object id (principal) of the Terraform/HCP service principal that needs Key Vault secret access. Provide via Terraform Cloud variable or CLI."
+  type        = string
+}
