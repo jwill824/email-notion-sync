@@ -19,12 +19,6 @@ variable "function_app_name" {
   type        = string
 }
 
-variable "azure_functionapp_publish_profile" {
-  description = "Azure Function App publish profile XML string"
-  type        = string
-  sensitive   = true
-}
-
 variable "azure_credentials" {
   description = "Azure credentials for login action (JSON)"
   type        = string

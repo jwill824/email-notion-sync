@@ -25,12 +25,6 @@ resource "github_actions_secret" "azure_functionapp_name" {
   plaintext_value = var.function_app_name
 }
 
-resource "github_actions_secret" "azure_functionapp_publish_profile" {
-  repository      = var.github_repo
-  secret_name     = "AZURE_FUNCTIONAPP_PUBLISH_PROFILE"
-  plaintext_value = var.azure_functionapp_publish_profile
-}
-
 resource "github_actions_secret" "azure_credentials" {
   repository      = var.github_repo
   secret_name     = "AZURE_CREDENTIALS"
