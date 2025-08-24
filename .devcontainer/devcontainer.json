@@ -39,7 +39,8 @@
                 "EditorConfig.EditorConfig",
                 "Azurite.azurite",
                 "ms-azuretools.vscode-azureterraform",
-                "donjayamanne.githistory"
+                "donjayamanne.githistory",
+                "redhat.vscode-yaml"
             ],
             "settings": {
                 "azure-dev.auth.useIntegratedAuth": true,
