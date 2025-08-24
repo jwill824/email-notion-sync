@@ -4,12 +4,6 @@ variable "location" {
   default     = "East US 2"
 }
 
-variable "project_name" {
-  description = "Project name prefix for resources"
-  type        = string
-  default     = "email-notion-sync"
-}
-
 variable "gmail_api_name" {
   description = "Name of the GmailApi Container App"
   type        = string
@@ -46,5 +40,15 @@ variable "notion_api_key" {
 
 variable "hcp_sp_object_id" {
   description = "Object id (principal) of the Terraform/HCP service principal that needs Key Vault secret access. Provide via Terraform Cloud variable or CLI."
+  type        = string
+}
+
+variable "github_owner" {
+  description = "GitHub owner or organization where the container images are hosted"
+  type        = string
+}
+
+variable "github_repo" {
+  description = "GitHub repository name where the container images are hosted"
   type        = string
 }
