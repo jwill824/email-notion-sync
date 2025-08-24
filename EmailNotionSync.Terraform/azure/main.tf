@@ -70,7 +70,7 @@ resource "azurerm_key_vault" "main" {
   access_policy {
     tenant_id          = data.azurerm_client_config.current.tenant_id
     object_id          = azurerm_linux_function_app.main.identity[0].principal_id
-    secret_permissions = ["get", "list"]
+    secret_permissions = ["Get", "List"]
   }
 }
 
