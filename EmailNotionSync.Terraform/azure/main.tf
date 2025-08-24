@@ -185,9 +185,10 @@ resource "azurerm_key_vault_secret" "notion_api_key" {
 }
 
 resource "azurerm_linux_function_app_slot" "staging" {
-  name                 = "staging"
-  function_app_id      = azurerm_linux_function_app.main.id
-  storage_account_name = azurerm_storage_account.main.name
+  name                       = "staging"
+  function_app_id            = azurerm_linux_function_app.main.id
+  storage_account_name       = azurerm_storage_account.main.name
+  storage_account_access_key = azurerm_storage_account.main.primary_access_key
 
   app_settings = {
     FUNCTIONS_WORKER_RUNTIME = "dotnet"
