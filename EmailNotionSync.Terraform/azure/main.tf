@@ -38,7 +38,8 @@ resource "azurerm_service_plan" "main" {
   # Use a Basic (B1) plan on Linux instead of the Consumption/Dynamic (Y1) plan.
   # Some subscriptions have a Dynamic VMs quota of 0 which causes a 401/"Additional quota" error
   # when creating Y1 service plans. Using B1 with reserved=true and kind="FunctionApp"
-  # avoids the Dynamic VMs quota requirement.
+  # avoids the Dynamic VMs quota requirement. `kind` and `reserved` are read-only and
+  # are set by the provider automatically; do not configure them directly.
   sku_name = "B1"
   os_type  = "Linux"
 }
@@ -86,7 +87,7 @@ resource "azurerm_container_app_environment" "main" {
   resource_group_name = azurerm_resource_group.main.name
 }
 
-resource "azurerm_container_app" "gmailapi" {
+resource "azurerm_container_app" "gmail_api" {
   name                         = var.gmail_api_name
   container_app_environment_id = azurerm_container_app_environment.main.id
   resource_group_name          = azurerm_resource_group.main.name
@@ -116,7 +117,7 @@ resource "azurerm_container_app" "gmailapi" {
   }
 }
 
-resource "azurerm_container_app" "notionapi" {
+resource "azurerm_container_app" "notion_api" {
   name                         = var.notion_api_name
   container_app_environment_id = azurerm_container_app_environment.main.id
   resource_group_name          = azurerm_resource_group.main.name
@@ -134,7 +135,7 @@ resource "azurerm_container_app" "notionapi" {
   }
   template {
     container {
-      name   = "notionapi"
+      name   = var.notion_api_name
       image  = var.notion_api_image
       cpu    = 0.5
       memory = "1Gi"
@@ -146,17 +147,17 @@ resource "azurerm_container_app" "notionapi" {
   }
 }
 
-resource "azurerm_key_vault_access_policy" "gmailapi" {
+resource "azurerm_key_vault_access_policy" "gmail_api" {
   key_vault_id       = azurerm_key_vault.main.id
   tenant_id          = data.azurerm_client_config.current.tenant_id
-  object_id          = azurerm_container_app.gmailapi.identity[0].principal_id
+  object_id          = azurerm_container_app.gmail_api.identity[0].principal_id
   secret_permissions = ["Get", "List"]
 }
 
-resource "azurerm_key_vault_access_policy" "notionapi" {
+resource "azurerm_key_vault_access_policy" "notion_api" {
   key_vault_id       = azurerm_key_vault.main.id
   tenant_id          = data.azurerm_client_config.current.tenant_id
-  object_id          = azurerm_container_app.notionapi.identity[0].principal_id
+  object_id          = azurerm_container_app.notion_api.identity[0].principal_id
   secret_permissions = ["Get", "List"]
 }
 
