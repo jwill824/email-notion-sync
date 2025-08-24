@@ -4,7 +4,6 @@ on:
       - main
     # Run on all branches except main
     # If you want to also run on PRs, add pull_request trigger
-  pull_request:
   workflow_dispatch:
     
 permissions:
