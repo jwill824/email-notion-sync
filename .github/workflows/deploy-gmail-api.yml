@@ -1,3 +1,5 @@
+name: Deploy Gmail API
+
 on:
   push:
     branches:

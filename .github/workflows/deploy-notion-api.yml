@@ -1,3 +1,5 @@
+name: Deploy Notion API
+
 on:
   push:
     branches:
