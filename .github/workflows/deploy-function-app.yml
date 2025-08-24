@@ -1,0 +1,66 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/deploy-function-app.yml'
+      - 'EmailNotionSync/EmailNotionSync.AppHost/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    name: Build and Publish Function App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore EmailNotionSync/EmailNotionSync.sln
+
+      - name: Build
+        run: dotnet build EmailNotionSync/EmailNotionSync.sln --no-restore --configuration Release
+
+      - name: Publish Function App
+        run: dotnet publish EmailNotionSync/EmailNotionSync.AppHost/EmailNotionSync.AppHost.csproj --configuration Release --output ./publish
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Zip publish folder
+        run: |
+            cd ./publish
+            zip -r ../publish.zip .
+        shell: bash
+
+      - name: Deploy zip to staging slot
+        run: |
+            az functionapp deployment source config-zip \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --name ${{ secrets.AZURE_FUNCTIONAPP_NAME }} \
+            --slot staging \
+            --src ./publish.zip
+
+      - name: Wait for app warm (simple) and run health check
+        run: |
+            sleep 10
+            curl --fail https://${{ secrets.AZURE_FUNCTIONAPP_NAME }}-staging.azurewebsites.net/health || (echo "health check failed" && exit 1)
+
+      - name: Swap staging into production
+        run: |
+            az functionapp deployment slot swap \
+            --name ${{ secrets.AZURE_FUNCTIONAPP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --slot staging \
+            --target-slot production
