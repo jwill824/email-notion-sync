@@ -9,16 +9,13 @@
     "features": {
         "ghcr.io/devcontainers/features/terraform:1": {},
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-        "ghcr.io/devcontainers/features/powershell:1": {},
+        "ghcr.io/devcontainers/features/powershell:2.0.1": {},
         "ghcr.io/devcontainers/features/azure-cli:1": {},
-        "ghcr.io/devcontainers/features/dotnet:2": {
-            "additionalVersions": [
-                "8.0"
-            ]
-        },
+        "ghcr.io/devcontainers/features/dotnet": {},
         "ghcr.io/devcontainers/features/github-cli:1": {},
         "ghcr.io/devcontainers/features/node:1": {},
-        "ghcr.io/dhoeric/features/terraform-docs:1": {}
+        "ghcr.io/dhoeric/features/terraform-docs:1": {},
+        "ghcr.io/devcontainers/features/copilot-cli:latest": {}
     },
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,consistency=cached",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
@@ -28,7 +25,6 @@
                 "hashicorp.terraform",
                 "GitHub.vscode-github-actions",
                 "Postman.postman-for-vscode",
-                "GitHub.copilot",
                 "DavidAnson.vscode-markdownlint",
                 "ms-dotnettools.csdevkit",
                 "editorconfig.editorconfig",

@@ -43,7 +43,7 @@ resource "azurerm_service_plan" "main" {
   name                = "${var.github_repo}-plan"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  sku_name            = "Y1"
+  sku_name            = "B1"
   os_type             = "Linux"
 }
 
@@ -210,12 +210,14 @@ resource "azurerm_key_vault_secret" "gmail_api_key" {
   name         = "GmailApiKey"
   value        = var.gmail_api_key
   key_vault_id = azurerm_key_vault.main.id
+  depends_on   = [azurerm_key_vault_access_policy.hcp_sp]
 }
 
 resource "azurerm_key_vault_secret" "notion_api_key" {
   name         = "NotionApiKey"
   value        = var.notion_api_key
   key_vault_id = azurerm_key_vault.main.id
+  depends_on   = [azurerm_key_vault_access_policy.hcp_sp]
 }
 
 resource "azurerm_linux_function_app_slot" "staging" {
