@@ -36,7 +36,9 @@
                 "Azurite.azurite",
                 "ms-azuretools.vscode-azureterraform",
                 "donjayamanne.githistory",
-                "redhat.vscode-yaml"
+                "redhat.vscode-yaml",
+                "GitHub.vscode-pull-request-github",
+                "ms-azuretools.vscode-azure-mcp-server"
             ],
             "settings": {
                 "azure-dev.auth.useIntegratedAuth": true,

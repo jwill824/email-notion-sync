@@ -4,5 +4,24 @@
     "azureFunctions.projectLanguage": "C#",
     "azureFunctions.projectRuntime": "~4",
     "debug.internalConsoleOptions": "neverOpen",
-    "azureFunctions.preDeployTask": "publish (functions)"
+    "azureFunctions.preDeployTask": "publish (functions)",
+    "chat.mcp.serverSampling": {
+        "email-notion-sync/.vscode/mcp.json: com.postman/postman-mcp-server": {
+            "allowedModels": [
+                "copilot/gpt-5-mini",
+                "copilot/claude-sonnet-4.6"
+            ]
+        }
+    },
+    "chat.promptFilesRecommendations": {
+        "speckit.constitution": true,
+        "speckit.specify": true,
+        "speckit.plan": true,
+        "speckit.tasks": true,
+        "speckit.implement": true
+    },
+    "chat.tools.terminal.autoApprove": {
+        ".specify/scripts/bash/": true,
+        ".specify/scripts/powershell/": true
+    }
 }
