@@ -25,7 +25,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '10.0.x'
+
+      - name: Log .NET SDK
+        run: dotnet --info
 
       - name: Restore dependencies
         run: dotnet restore EmailNotionSync/EmailNotionSync.sln
