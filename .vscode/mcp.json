@@ -1,65 +1,143 @@
 {
-    "servers": {
-        "notion": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "@notionhq/notion-mcp-server"
-            ],
-            "env": {
-                "OPENAPI_MCP_HEADERS": "{\"Authorization\":\"Bearer ${input:NOTION_TOKEN}\",\"Notion-Version\":\"2022-06-28\"}"
-            },
-            "type": "stdio"
-        },
-        "memory": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "@modelcontextprotocol/server-memory"
-            ],
-            "env": {
-                "MEMORY_FILE_PATH": "${input:memory_file_path}"
-            },
-            "type": "stdio"
-        },
-        "sequentialthinking": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "@modelcontextprotocol/server-sequential-thinking"
-            ]
-        },
-        "terraform": {
-            "command": "docker",
-            "args": [
-                "run",
-                "-i",
-                "--rm",
-                "hashicorp/terraform-mcp-server"
-            ]
-        },
-        "azure": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "@azure/mcp@latest",
-                "server",
-                "start"
-            ]
-        }
-    },
-    "inputs": [
-        {
-            "id": "NOTION_TOKEN",
-            "type": "promptString",
-            "description": "Notion API Token (https://www.notion.so/profile/integrations)",
-            "password": true
-        },
-        {
-            "id": "memory_file_path",
-            "type": "promptString",
-            "description": "Path to the memory storage file (optional)",
-            "password": false
-        }
-    ]
+	"servers": {
+		"com.microsoft/azure": {
+			"type": "stdio",
+			"command": "dnx",
+			"args": [
+				"Azure.Mcp@2.0.0-beta.23",
+				"--yes",
+				"--",
+				"server",
+				"start"
+			]
+		},
+		"com.postman/postman-mcp-server": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"@postman/postman-mcp-server@2.7.1"
+			],
+			"env": {
+				"POSTMAN_API_KEY": "${input:POSTMAN_API_KEY}"
+			}
+		},
+		"io.github.github/github-mcp-server": {
+			"type": "stdio",
+			"command": "docker",
+			"args": [
+				"run",
+				"-i",
+				"--rm",
+				"-e",
+				"GITHUB_PERSONAL_ACCESS_TOKEN=${input:token}",
+				"ghcr.io/github/github-mcp-server:0.31.0"
+			]
+		},
+		"io.github.hashicorp/terraform-mcp-server": {
+			"type": "stdio",
+			"command": "docker",
+			"args": [
+				"run",
+				"-i",
+				"--rm",
+				"run",
+				"--rm",
+				"-i",
+				"-e",
+				"${input:e}",
+				"TFE_ADDRESS",
+				"-e",
+				"${input:e}",
+				"TFE_TOKEN",
+				"-e",
+				"${input:e}",
+				"ENABLE_TF_OPERATIONS",
+				"hashicorp/terraform-mcp-server:0.4.0",
+				"-e",
+				"TFE_ADDRESS",
+				"-e",
+				"TFE_TOKEN",
+				"-e",
+				"ENABLE_TF_OPERATIONS",
+				"docker.io/hashicorp/terraform-mcp-server:0.4.0"
+			],
+			"env": {
+				"TFE_ADDRESS": "${input:TFE_ADDRESS}",
+				"TFE_TOKEN": "${input:TFE_TOKEN}",
+				"ENABLE_TF_OPERATIONS": "${input:ENABLE_TF_OPERATIONS}"
+			}
+		},
+		"io.github.wonderwhy-er/desktop-commander": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"--registry",
+				"https://registry.npmjs.org",
+				"@wonderwhy-er/desktop-commander@0.2.37"
+			]
+		},
+		"makenotion/notion-mcp-server": {
+			"type": "http",
+			"url": "https://mcp.notion.com/sse"
+		},
+		"microsoftdocs/mcp": {
+			"type": "http",
+			"url": "https://learn.microsoft.com/api/mcp"
+		}
+	},
+	"inputs": [
+		{
+			"id": "POSTMAN_API_KEY",
+			"type": "promptString",
+			"description": "A valid Postman API key.",
+			"password": true
+		},
+		{
+			"id": "token",
+			"type": "promptString",
+			"description": "",
+			"password": true
+		},
+		{
+			"id": "e",
+			"type": "promptString",
+			"description": "Set an environment variable in the runtime",
+			"password": false
+		},
+		{
+			"id": "e",
+			"type": "promptString",
+			"description": "Set an environment variable in the runtime",
+			"password": false
+		},
+		{
+			"id": "e",
+			"type": "promptString",
+			"description": "Set an environment variable in the runtime",
+			"password": false
+		},
+		{
+			"id": "TFE_ADDRESS",
+			"type": "promptString",
+			"description": "HCP Terraform or Terraform Enterprise base URL.",
+			"password": false,
+			"default": "https://app.terraform.io"
+		},
+		{
+			"id": "TFE_TOKEN",
+			"type": "promptString",
+			"description": "HCP Terraform or Terraform Enterprise API token used to authenticate requests.",
+			"password": true
+		},
+		{
+			"id": "ENABLE_TF_OPERATIONS",
+			"type": "pickString",
+			"description": "Set to true to enable tools that execute Terraform operations requiring explicit approval.",
+			"default": "false",
+			"options": [
+				"true",
+				"false"
+			]
+		}
+	]
 }

@@ -1,0 +1,15 @@
+{
+	"account_id": "5EA3V6QNG5B3TDBEZUNMYLPIKI",
+	"entrypoint": [
+		"terraform"
+	],
+	"credentials": [
+		{
+			"plugin": "github",
+			"credential_type": "personal_access_token",
+			"usage_id": "project",
+			"vault_id": "iv7uk7cnkiuxh2d4bmislu545m",
+			"item_id": "rvmzyjgorix4lnac23lg3zfwne"
+		}
+	]
+}
