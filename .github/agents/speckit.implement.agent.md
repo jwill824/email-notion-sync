@@ -1,5 +1,10 @@
 ---
 description: Execute the implementation plan by processing and executing all tasks defined in tasks.md
+handoffs: 
+  - label: Create Pull Request
+    agent: speckit.create-pr
+    prompt: Create a pull request for the feature branch
+    send: true
 ---
 
 ## User Input
