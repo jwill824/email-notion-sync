@@ -1,4 +1,3 @@
-```markdown
 # Feature Specification: Fix AzureAD permissions causing Terraform 403
 
 **Feature Branch**: `001-fix-azuread-permissions`  
@@ -89,8 +88,8 @@ Operators and maintainers need clear documentation: what permissions are require
 - **FR-003**: When permission-related errors occur, the system MUST produce clear, actionable diagnostics in logs and pipeline output describing which privilege is missing and suggested remediation steps.
 - **FR-004**: The fix MUST include an automated or documented verification step that confirms the provisioning identity has the minimum required permissions before attempting creation.
 - **FR-005**: The change MUST be covered by an automated integration test or pipeline check that validates successful resource creation in a repeatable staging environment.
-- **FR-006**: The remediation approach SHOULD be one of the following options: grant the provisioning identity the required permission to create the application, or switch to using a pre-created, managed application that Terraform can reference. [NEEDS CLARIFICATION: choose remediation approach — grant provisioning identity elevated rights, or pre-create app and reference it?]
-- **FR-007**: The scope of the change SHOULD be limited to CI/HCP environments initially; broader production rollout requires a separate approval. [NEEDS CLARIFICATION: Should the fix be applied only to CI/HCP, or also to ad-hoc local dev usage?]
+- **FR-006**: The remediation approach WILL be to grant the provisioning identity the required permission to create the Azure AD application (chosen option: grant provisioning identity required permissions). This requires tenant admin approval and a security review; changes will be limited to the provisioning identity used by HCP/Terraform.
+- **FR-007**: The scope of the change WILL be limited to CI/HCP environments initially (chosen option: CI/HCP only). Local developer workflows will remain unchanged unless a separate follow-up change is approved.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -130,5 +129,3 @@ Operators and maintainers need clear documentation: what permissions are require
 ## Notes / Implementation Constraints
 
 - This specification intentionally describes the problem and acceptance criteria; implementation details (exact permission names, Terraform code changes) will be documented in the tasks and PR that implement the fix.
-
-``` 
