@@ -1,4 +1,3 @@
-````markdown
 # Implementation Plan: Upgrade to .NET 10
 
 **Branch**: `001-upgrade-dotnet10` | **Date**: 2026-02-28 | **Spec**: [specs/001-upgrade-dotnet10/spec.md](specs/001-upgrade-dotnet10/spec.md)
@@ -119,5 +118,3 @@ Phase 5 — Polish & Documentation:
 ## Notes
 
 - The plan follows the project's constitution: data fidelity is preserved (no data migrations), test-first validation is enforced, and observability checks are included.
-
-````

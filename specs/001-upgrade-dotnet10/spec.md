@@ -1,4 +1,3 @@
-```markdown
 # Feature Specification: Upgrade to .NET 10
 
 **Feature Branch**: `001-upgrade-dotnet10`
@@ -62,5 +61,3 @@ CI workflows must install the .NET 10 SDK, build, test, and publish artifacts/im
 - **SC-002**: All unit tests pass (`dotnet test` exit code 0) on .NET 10.
 - **SC-003**: Docker images build using .NET 10 base images and service health checks return healthy in smoke runs.
 - **SC-004**: CI workflows succeed on feature branch using .NET 10 and publish test images.
-
-``` 

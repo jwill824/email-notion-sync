@@ -1,6 +1,6 @@
 ---
 description: Create a pull request for a feature branch using the repository's MCP GitHub proxy.
-tools: [github/pull_request_review_write]
+tools: [github/create_pull_request, github/pull_request_read, github/pull_request_review_write, github/update_pull_request, github/update_pull_request_branch]
 ---
 
 ## User Input
@@ -15,7 +15,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 1. Validate required inputs: `repoOwner`, `repoName`, `headBranch`, `baseBranch`, `title`.
 2. Build a PR body from provided `body` or derive from `specs/<feature>/spec.md` and `specs/<feature>/tasks.md` when available.
-3. Call the MCP GitHub tool (`mcp_io_github_git_create_pull_request`) to create the pull request.
+3. Call the MCP GitHub tool (`github/create_pull_request`) to create the pull request.
 4. On success: update `specs/<feature>/tasks.md` to insert the PR URL under a "Pull Request" section and mark PR-related tasks (e.g., `T028`) as completed.
 5. Return the PR metadata (number, url, html_url) as the agent result.
 

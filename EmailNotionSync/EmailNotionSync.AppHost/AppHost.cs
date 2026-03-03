@@ -6,7 +6,7 @@ var gmailApi = builder.AddProject<Projects.EmailNotionSync_GmailApi>("gmailapi")
 var notionApi = builder.AddProject<Projects.EmailNotionSync_NotionApi>("notionapi")
     .WithHttpEndpoint(port: 5002);
 
-builder.AddProject<Projects.EmailNotionSync_FunctionApp>("functionapp")
+builder.AddAzureFunctionsProject<Projects.EmailNotionSync_FunctionApp>("functionapp")
     .WithReference(gmailApi)
     .WithReference(notionApi);
 
