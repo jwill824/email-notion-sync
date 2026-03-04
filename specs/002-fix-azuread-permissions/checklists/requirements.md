@@ -2,7 +2,7 @@
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-03-02
-**Feature**: [spec.md](specs/001-fix-azuread-permissions/spec.md)
+**Feature**: [spec.md](specs/002-fix-azuread-permissions/spec.md)
 
 ## Content Quality
 
@@ -21,8 +21,6 @@
 - [x] Edge cases are identified
 - [x] Scope is clearly bounded
 - [x] Dependencies and assumptions identified
-
-## Feature Readiness
 
 ## Feature Readiness
 
