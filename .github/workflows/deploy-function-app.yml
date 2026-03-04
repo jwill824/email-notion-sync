@@ -52,23 +52,9 @@ jobs:
             zip -r ../publish.zip .
         shell: bash
 
-      - name: Deploy zip to staging slot
+      - name: Deploy zip to production
         run: |
             az functionapp deployment source config-zip \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --name ${{ secrets.AZURE_FUNCTIONAPP_NAME }} \
-            --slot staging \
             --src ./publish.zip
-
-      - name: Wait for app warm (simple) and run health check
-        run: |
-            sleep 10
-            curl --fail https://${{ secrets.AZURE_FUNCTIONAPP_NAME }}-staging.azurewebsites.net/health || (echo "health check failed" && exit 1)
-
-      - name: Swap staging into production
-        run: |
-            az functionapp deployment slot swap \
-            --name ${{ secrets.AZURE_FUNCTIONAPP_NAME }} \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --slot staging \
-            --target-slot production

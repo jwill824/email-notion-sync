@@ -43,7 +43,7 @@ resource "azurerm_service_plan" "main" {
   name                = "${var.github_repo}-plan"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  sku_name            = "B1"
+  sku_name            = "Y1"
   os_type             = "Linux"
 }
 
@@ -218,26 +218,4 @@ resource "azurerm_key_vault_secret" "notion_api_key" {
   value        = var.notion_api_key
   key_vault_id = azurerm_key_vault.main.id
   depends_on   = [azurerm_key_vault_access_policy.hcp_sp]
-}
-
-resource "azurerm_linux_function_app_slot" "staging" {
-  name                       = "staging"
-  function_app_id            = azurerm_linux_function_app.main.id
-  storage_account_name       = azurerm_storage_account.main.name
-  storage_account_access_key = azurerm_storage_account.main.primary_access_key
-
-  app_settings = {
-    FUNCTIONS_WORKER_RUNTIME = "dotnet"
-    AzureWebJobsStorage      = azurerm_storage_account.main.primary_connection_string
-  }
-
-  site_config {
-    application_stack {
-      dotnet_version = "8.0"
-    }
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
 }
