@@ -98,7 +98,7 @@ resource "azuread_application_federated_identity_credential" "github_actions_cre
 resource "azurerm_role_assignment" "sp_rg_contributor" {
   scope                = azurerm_resource_group.main.id
   role_definition_name = "Contributor"
-  principal_id         = azuread_service_principal.github_oidc_sp.id
+  principal_id         = azuread_service_principal.github_oidc_sp.object_id
 }
 
 output "oidc_client_id" {
