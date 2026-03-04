@@ -174,6 +174,98 @@ Operators and maintainers need clear documentation: what permissions are require
 7. Review drift on all 8 drifted resources listed in FR-009 and bring them back to desired state or document accepted divergence.
 8. Confirm runbook and documentation are added to the repo and that a reviewer can follow them to verify permissions.
 
+## Additional Blockers Discovered During Apply
+
+The following issues were discovered only after `terraform apply` started running in HCP — they were not visible from `terraform plan` alone.
+
+### Blocker A: `azurerm_role_assignment` used `.id` instead of `.object_id`
+
+**Error:**
+```
+Error: unexpected status 403 (403 Forbidden)
+AuthorizationFailed: The client '...' does not have authorization to perform action
+'Microsoft.Authorization/roleAssignments/write'
+```
+
+**Root cause (misleading):** The 403 initially suggested missing RBAC permissions, but the actual root cause was a second `azuread` provider attribute bug. `azurerm_role_assignment.principal_id` was set to `azuread_service_principal.github_oidc_sp.id` (OData path `/servicePrincipals/{objectId}`) instead of `.object_id` (bare GUID). The ARM API rejected the malformed principal ID.
+
+**Fix:** Applied in `main.tf` line 101:
+```hcl
+# Before (wrong)
+principal_id = azuread_service_principal.github_oidc_sp.id
+# After (correct)
+principal_id = azuread_service_principal.github_oidc_sp.object_id
+```
+
+**Pattern:** AzureRM resources expect plain GUIDs for `principal_id`/`object_id` fields; `azuread` provider `.id` attributes return OData paths (`/servicePrincipals/{guid}`). Always use `.object_id` when passing a service principal to an `azurerm_*` resource.
+
+---
+
+### Blocker B: HCP SP lacked `Microsoft.Authorization/roleAssignments/write`
+
+**Error (after fixing Blocker A):**
+```
+Error: unexpected status 403 (403 Forbidden)
+AuthorizationFailed: does not have authorization to perform action
+'Microsoft.Authorization/roleAssignments/write'
+```
+
+**Root cause:** The HCP service principal had `Contributor` at subscription scope. `Contributor` explicitly excludes `Microsoft.Authorization/*` actions — creating role assignments requires `Owner` or `User Access Administrator`.
+
+**Fix:** Granted `User Access Administrator` to the HCP SP on the resource group scope:
+```bash
+az rest --method PUT \
+  --url "https://management.azure.com/subscriptions/{subId}/resourceGroups/email-notion-sync-rg/providers/Microsoft.Authorization/roleAssignments/{newGuid}?api-version=2022-04-01" \
+  --body '{"properties":{"roleDefinitionId":"/subscriptions/{subId}/providers/Microsoft.Authorization/roleDefinitions/18d7d88d-d35e-4fb5-a5c3-7773c20a72d9","principalId":"eb22353c-c007-4736-b1cf-78024d946b57","principalType":"ServicePrincipal"}}'
+```
+
+Note: `User Access Administrator` role definition ID is always `18d7d88d-d35e-4fb5-a5c3-7773c20a72d9` (built-in, subscription-invariant).
+
+---
+
+### Blocker C: App Service Plan quota = 0 for all non-Premium tiers
+
+**Error:**
+```
+Error: creating App Service Plan: unexpected status 401 (401 Unauthorized)
+Current Limit (Basic VMs): 0
+```
+
+Then after switching to Y1:
+```
+Current Limit (Dynamic VMs): 0
+```
+
+**Root cause:** New Pay-As-You-Go Azure subscriptions default to quota 0 for all App Service SKUs in a given region. Every SKU from F1 through EP3 had quota=0 in `eastus2`. Only Premium V4 tiers (P0v4+, ~$140+/month) had quota=30.
+
+**Fix:**
+1. Changed `sku_name = "B1"` → `"Y1"` (Consumption plan — free for low-usage Functions)
+2. Removed `azurerm_linux_function_app_slot.staging` — Consumption plans do not support deployment slots
+3. Updated `deploy-function-app.yml` to deploy directly to production instead of staging slot + swap
+4. Requested Y1 (Dynamic VMs) quota increase via Azure Portal → Help + Support → Quota → App Service → East US 2 → requested 1 instance → approved
+
+**Quota verification:**
+```bash
+az quota list \
+  --scope "subscriptions/{subId}/providers/Microsoft.Web/locations/eastus2" \
+  --output json | python3 -c "
+import json, sys
+for item in json.loads(sys.stdin.read()):
+    name = item['name']
+    val = item['properties']['limit']['value']
+    if val > 0:
+        print(f'{name}: {val}')
+"
+```
+
+**Cost impact of Y1:** Azure Functions Consumption plan bills per-execution and per GB-second. With a timer trigger firing every minute:
+- ~43,200 executions/month — well under the 1M free-tier grant
+- ~22,000 GB-seconds/month — well under the 400K free-tier grant
+- **Estimated monthly cost: $0.00**
+
+---
+
 ## Notes / Implementation Constraints
 
 - This specification intentionally describes the problem and acceptance criteria; implementation details (exact permission names, Terraform code changes) will be documented in the tasks and PR that implement the fix.
+- The `azuread` provider consistently uses OData paths for `.id` attributes; always use `.object_id` when an `azurerm_*` resource expects a plain GUID.

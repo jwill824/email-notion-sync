@@ -2,10 +2,13 @@
 
 ## Scope
 
-This runbook covers two failure modes:
+This runbook covers failure modes encountered while getting `terraform apply` to succeed in HCP:
 
 1. **Terraform code error** — `application_id` attribute mismatch on `azuread_application_federated_identity_credential` (parsing error).
 2. **Permission error** — provisioning identity receives `403 Authorization_RequestDenied` when creating/updating `azuread_application`.
+3. **Terraform code error** — `azurerm_role_assignment.principal_id` used `.id` (OData path) instead of `.object_id` (GUID).
+4. **RBAC gap** — HCP SP has `Contributor` but not `User Access Administrator`; cannot create role assignments.
+5. **App Service quota = 0** — new PAYG subscriptions default to 0 quota for all App Service SKUs in a region.
 
 ---
 
@@ -60,7 +63,95 @@ Remove-MgDirectoryRoleMember -DirectoryRoleId $role.Id -DirectoryObjectId $sp.Id
 
 ---
 
-## Failure 3: Drift on container app resources
+---
+
+## Failure 3: `azurerm_role_assignment` 403 — malformed principal ID
+
+**Symptom:**
+```
+Error: unexpected status 403 (403 Forbidden)
+AuthorizationFailed: does not have authorization to perform action
+'Microsoft.Authorization/roleAssignments/write'
+```
+
+**Root cause:** `azurerm_role_assignment.principal_id` was set to `azuread_service_principal.github_oidc_sp.id` which returns the OData path `/servicePrincipals/{guid}`. The ARM API requires a plain GUID.
+
+**Fix:** Already applied. Corrected line in `main.tf`:
+```hcl
+principal_id = azuread_service_principal.github_oidc_sp.object_id
+```
+
+**General rule:** When passing a service principal reference to any `azurerm_*` resource, always use `.object_id`, never `.id`.
+
+---
+
+## Failure 4: HCP SP lacks `roleAssignments/write` (403 on role assignment)
+
+**Symptom:** Same 403 as above but after the code fix — HCP SP genuinely lacks the permission.
+
+**Root cause:** `Contributor` role excludes all `Microsoft.Authorization/*` actions. Creating role assignments requires `Owner` or `User Access Administrator`.
+
+**Fix:** Grant `User Access Administrator` to the HCP SP on the resource group:
+```bash
+az rest --method PUT \
+  --url "https://management.azure.com/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg/providers/Microsoft.Authorization/roleAssignments/{newGuid}?api-version=2022-04-01" \
+  --body '{
+    "properties": {
+      "roleDefinitionId": "/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/providers/Microsoft.Authorization/roleDefinitions/18d7d88d-d35e-4fb5-a5c3-7773c20a72d9",
+      "principalId": "eb22353c-c007-4736-b1cf-78024d946b57",
+      "principalType": "ServicePrincipal"
+    }
+  }'
+```
+
+**Verification:**
+```bash
+az role assignment list \
+  --assignee eb22353c-c007-4736-b1cf-78024d946b57 \
+  --scope /subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg \
+  --query "[].roleDefinitionName" --output tsv
+# Expected: User Access Administrator (and Contributor)
+```
+
+---
+
+## Failure 5: App Service Plan quota = 0 (401 Unauthorized)
+
+**Symptom:**
+```
+Error: creating App Service Plan: unexpected status 401 (401 Unauthorized)
+Current Limit (Basic VMs): 0   (or Dynamic VMs: 0)
+```
+
+**Root cause:** New Azure PAYG subscriptions default to quota 0 for all App Service SKUs in each region. This applies to F1, D1, B1–B3, S1–S3, Y1, EP1–EP3, and more — even for Pay-As-You-Go subscriptions.
+
+**Diagnosis — check all SKU quotas for a region:**
+```bash
+az quota list \
+  --scope "subscriptions/{subId}/providers/Microsoft.Web/locations/eastus2" \
+  --output json | python3 -c "
+import json, sys
+for item in json.loads(sys.stdin.read()):
+    name = item['name']
+    val = item['properties']['limit']['value']
+    print(f'{name}: {val}')
+"
+```
+
+**Fix:**
+1. Determine which SKU you need (Y1 for Consumption, B1 for Basic, S1 for Standard).
+2. Go to **Azure Portal → Help + Support → New support request**:
+   - Issue type: Service and subscription limits (quotas)
+   - Quota type: App Service
+   - Select subscription, region, SKU → request new limit of **1**
+3. Approval is typically instant for PAYG subscriptions.
+4. Verify: re-run the diagnosis command above and confirm the SKU limit > 0.
+
+**Additional constraint for Y1 (Consumption):** Consumption plans do not support deployment slots. Remove `azurerm_linux_function_app_slot` resources and update any deploy workflows to deploy directly to production.
+
+---
+
+## Failure 6: Drift on container app resources
 
 **Symptom:** Plan shows drift on `azurerm_container_app.gmail_api` or `azurerm_container_app.notion_api`.
 
