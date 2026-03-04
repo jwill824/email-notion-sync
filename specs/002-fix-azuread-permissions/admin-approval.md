@@ -19,13 +19,6 @@ These role assignments are **bootstrap steps**. Terraform authenticates to Azure
 - **Application Administrator** — allows creating and managing app registrations and service principals.
 - Do **not** assign Global Administrator; it is far broader than needed.
 
-## Current status (as of this spec)
-
-The HCP service principal (`email-notion-sync-prod-sp`, object ID `eb22353c-c007-4736-b1cf-78024d946b57`) was found with **Global Administrator** assigned — more than required. The steps below correct this to least-privilege:
-
-1. ✅ Application Administrator has been assigned (T008 complete)
-2. ✅ Global Administrator has been removed (least-privilege confirmed)
-
 ## Portal steps: assign Application Administrator
 
 1. Sign in to the Azure Portal as a tenant administrator.

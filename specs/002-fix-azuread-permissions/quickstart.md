@@ -55,6 +55,10 @@ az ad sp show --id <oidc_client_id>
 
 # Federated credential exists
 az ad app federated-credential list --id <oidc_client_id>
+
+# Function App exists (Y1 Consumption plan, no staging slot)
+az functionapp show --name email-notion-sync-func --resource-group email-notion-sync-rg \
+  --query "{state:state,sku:sku.name}" --output json
 ```
 
 ## 4. HCP workspace name
@@ -69,4 +73,6 @@ az ad app federated-credential list --id <oidc_client_id>
 |---------|-------------|-----------|
 | `403 Authorization_RequestDenied` on `azuread_application` | HCP SP lacks Application Administrator role | Follow `admin-approval.md` |
 | `parsing the Application ID: the number of segments didn't match` | `application_id` used `.client_id` instead of `.id` | Ensure commit with T000 fix is merged |
+| `roleAssignments/write` authorization error | HCP SP lacks User Access Administrator RBAC role at RG scope | Grant `User Access Administrator` (role ID `18d7d88d-d35e-4fb5-a5c3-7773c20a72d9`) on the resource group |
+| `401 Unauthorized — Current Limit (Dynamic VMs): 0` | App Service quota = 0 for all SKUs in region | Request quota increase via Azure Portal → Help + Support → Quota → App Service → region → Dynamic VMs → 1 |
 | Drift on container app resources | Image tag updated by deploy workflow outside Terraform | Expected; review plan diff and accept or reconcile |
