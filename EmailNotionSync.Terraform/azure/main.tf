@@ -88,7 +88,7 @@ resource "azuread_service_principal" "github_oidc_sp" {
 }
 
 resource "azuread_application_federated_identity_credential" "github_actions_credential" {
-  application_id = azuread_application.github_oidc_app.client_id
+  application_id = azuread_application.github_oidc_app.id
   display_name   = "github-actions-main-oidc"
   issuer         = "https://token.actions.githubusercontent.com"
   subject        = "repo:${var.github_owner}/${var.github_repo}:ref:refs/heads/main"

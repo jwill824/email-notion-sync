@@ -1,0 +1,30 @@
+# .terraformignore — controls what files HCP Terraform uploads from the repo root.
+# The HCP workspace is configured to use EmailNotionSync.Terraform/azure/ as its
+# working directory, but it uploads the full repo context.  Exclude large or
+# irrelevant directories to keep uploads fast.
+
+# .NET build outputs
+**/bin/
+**/obj/
+
+# NuGet packages
+**/packages/
+
+# Test results
+**/*.trx
+**/TestResults/
+
+# IDE / OS
+**/.vs/
+**/.vscode/
+**/.idea/
+**/.DS_Store
+**/Thumbs.db
+
+# Secrets / local overrides (never upload)
+**/.env
+**/.env.*
+**/terraform.tfvars.backup
+
+# Git internals
+**/.git/

@@ -1,0 +1,262 @@
+Running plan in Terraform Cloud. Output will stream here. Pressing Ctrl-C
+will stop streaming the logs, but will not stop the plan running remotely.
+
+Preparing the remote plan...
+
+The remote workspace is configured to work with configuration at
+EmailNotionSync.Terraform/azure relative to the target repository.
+
+Terraform will upload the contents of the following directory,
+excluding files or directories as defined by a .terraformignore file
+at /Users/jeffwilliams/Developer/repos/email-notion-sync/.terraformignore (if it is present),
+in order to capture the filesystem context the remote workspace expects:
+    /Users/jeffwilliams/Developer/repos/email-notion-sync
+
+To view this run in a browser, visit:
+https://app.terraform.io/app/Thingstead/email-notion-sync-azure/runs/run-xPQYa9d3YozR1et4
+
+Waiting for the plan to start...
+
+Terraform v1.12.2
+on linux_amd64
+Initializing plugins and modules...
+data.azurerm_client_config.current: Refreshing...
+azurerm_resource_group.main: Refreshing state... [id=/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg]
+data.azurerm_client_config.current: Refresh complete after 0s [id=Y2xpZW50Q29uZmlncy9jbGllbnRJZD0yMjI2MzdhZC1iZWIxLTQxNjktYTJlNS01ZDZkNmRhZjk3ZWE7b2JqZWN0SWQ9ZWIyMjM1M2MtYzAwNy00NzM2LWIxY2YtNzgwMjRkOTQ2YjU3O3N1YnNjcmlwdGlvbklkPTRiZjgxMmFiLTU1NGQtNGExNi04MjQxLTU3OGUxMzYzMmJiMzt0ZW5hbnRJZD0zY2Y3Yzg0OC02MWRlLTQ3ZWYtYjAzNS1kNzg4OGVhYTE5MGM=]
+azuread_application.github_oidc_app: Refreshing state... [id=/applications/600f9303-d545-4c7c-a03f-d538055423ee]
+azuread_service_principal.github_oidc_sp: Refreshing state... [id=/servicePrincipals/64a7beb6-6878-4fef-9233-acf2cfea11d3]
+azurerm_container_app_environment.main: Refreshing state... [id=/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg/providers/Microsoft.App/managedEnvironments/email-notion-sync-cae]
+azurerm_application_insights.main: Refreshing state... [id=/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg/providers/Microsoft.Insights/components/email-notion-sync-ai]
+azurerm_key_vault.main: Refreshing state... [id=/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg/providers/Microsoft.KeyVault/vaults/email-notion-sync-kv]
+azurerm_storage_account.main: Refreshing state... [id=/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg/providers/Microsoft.Storage/storageAccounts/emailnotionsyncsa]
+azurerm_container_app.gmail_api: Refreshing state... [id=/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg/providers/Microsoft.App/containerApps/gmail-api]
+azurerm_container_app.notion_api: Refreshing state... [id=/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg/providers/Microsoft.App/containerApps/notion-api]
+azurerm_key_vault_access_policy.hcp_sp: Refreshing state... [id=/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg/providers/Microsoft.KeyVault/vaults/email-notion-sync-kv/objectId/eb22353c-c007-4736-b1cf-78024d946b57]
+azurerm_key_vault_access_policy.gmail_api: Refreshing state... [id=/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg/providers/Microsoft.KeyVault/vaults/email-notion-sync-kv/objectId/ea4ab619-183e-4113-bcdd-7082e994675f]
+azurerm_key_vault_access_policy.notion_api: Refreshing state... [id=/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg/providers/Microsoft.KeyVault/vaults/email-notion-sync-kv/objectId/f829bdc8-ebf5-475e-b462-a5d21a88048b]
+azurerm_key_vault_secret.gmail_api_key: Refreshing state... [id=https://email-notion-sync-kv.vault.azure.net/secrets/GmailApiKey/4e2a9e0d3b3043dca13293355279cda0]
+azurerm_key_vault_secret.notion_api_key: Refreshing state... [id=https://email-notion-sync-kv.vault.azure.net/secrets/NotionApiKey/df753004e06948c0bc0bac231e85c9de]
+azurerm_container_app_environment.main: Drift detected (update)
+azurerm_key_vault_secret.notion_api_key: Drift detected (update)
+azurerm_key_vault.main: Drift detected (update)
+azurerm_container_app.gmail_api: Drift detected (update)
+azurerm_key_vault_secret.gmail_api_key: Drift detected (update)
+azuread_application.github_oidc_app: Drift detected (update)
+azurerm_container_app.notion_api: Drift detected (update)
+azuread_service_principal.github_oidc_sp: Drift detected (update)
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # azuread_application_federated_identity_credential.github_actions_credential will be created
+  + resource "azuread_application_federated_identity_credential" "github_actions_credential" {
+      + application_id = "/applications/600f9303-d545-4c7c-a03f-d538055423ee"
+      + audiences      = [
+          + "api://AzureADTokenExchange",
+        ]
+      + credential_id  = (known after apply)
+      + display_name   = "github-actions-main-oidc"
+      + id             = (known after apply)
+      + issuer         = "https://token.actions.githubusercontent.com"
+      + subject        = "repo:jwill824/email-notion-sync:ref:refs/heads/main"
+    }
+
+  # azurerm_key_vault_access_policy.function_app will be created
+  + resource "azurerm_key_vault_access_policy" "function_app" {
+      + id                 = (known after apply)
+      + key_vault_id       = "/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg/providers/Microsoft.KeyVault/vaults/email-notion-sync-kv"
+      + object_id          = (known after apply)
+      + secret_permissions = [
+          + "Get",
+          + "List",
+        ]
+      + tenant_id          = "3cf7c848-61de-47ef-b035-d7888eaa190c"
+    }
+
+  # azurerm_linux_function_app.main will be created
+  + resource "azurerm_linux_function_app" "main" {
+      + app_settings                                   = {
+          + "AzureWebJobsStorage"      = (sensitive value)
+          + "FUNCTIONS_WORKER_RUNTIME" = "dotnet"
+        }
+      + builtin_logging_enabled                        = true
+      + client_certificate_enabled                     = false
+      + client_certificate_mode                        = "Optional"
+      + content_share_force_disabled                   = false
+      + custom_domain_verification_id                  = (sensitive value)
+      + daily_memory_time_quota                        = 0
+      + default_hostname                               = (known after apply)
+      + enabled                                        = true
+      + ftp_publish_basic_authentication_enabled       = true
+      + functions_extension_version                    = "~4"
+      + hosting_environment_id                         = (known after apply)
+      + https_only                                     = false
+      + id                                             = (known after apply)
+      + key_vault_reference_identity_id                = (known after apply)
+      + kind                                           = (known after apply)
+      + location                                       = "eastus2"
+      + name                                           = "email-notion-sync-func"
+      + outbound_ip_address_list                       = (known after apply)
+      + outbound_ip_addresses                          = (known after apply)
+      + possible_outbound_ip_address_list              = (known after apply)
+      + possible_outbound_ip_addresses                 = (known after apply)
+      + public_network_access_enabled                  = true
+      + resource_group_name                            = "email-notion-sync-rg"
+      + service_plan_id                                = (known after apply)
+      + site_credential                                = (sensitive value)
+      + storage_account_access_key                     = (sensitive value)
+      + storage_account_name                           = "emailnotionsyncsa"
+      + storage_uses_managed_identity                  = false
+      + virtual_network_backup_restore_enabled         = false
+      + vnet_image_pull_enabled                        = false
+      + webdeploy_publish_basic_authentication_enabled = true
+      + zip_deploy_file                                = (known after apply)
+
+      + identity {
+          + principal_id = (known after apply)
+          + tenant_id    = (known after apply)
+          + type         = "SystemAssigned"
+        }
+
+      + site_config {
+          + always_on                               = (known after apply)
+          + app_scale_limit                         = (known after apply)
+          + container_registry_use_managed_identity = false
+          + default_documents                       = (known after apply)
+          + detailed_error_logging_enabled          = (known after apply)
+          + elastic_instance_minimum                = (known after apply)
+          + ftps_state                              = "Disabled"
+          + http2_enabled                           = false
+          + ip_restriction_default_action           = "Allow"
+          + linux_fx_version                        = (known after apply)
+          + load_balancing_mode                     = "LeastRequests"
+          + managed_pipeline_mode                   = "Integrated"
+          + minimum_tls_version                     = "1.2"
+          + pre_warmed_instance_count               = (known after apply)
+          + remote_debugging_enabled                = false
+          + remote_debugging_version                = (known after apply)
+          + scm_ip_restriction_default_action       = "Allow"
+          + scm_minimum_tls_version                 = "1.2"
+          + scm_type                                = (known after apply)
+          + scm_use_main_ip_restriction             = false
+          + use_32_bit_worker                       = false
+          + vnet_route_all_enabled                  = false
+          + websockets_enabled                      = false
+          + worker_count                            = (known after apply)
+
+          + application_stack {
+              + dotnet_version              = "8.0"
+              + use_dotnet_isolated_runtime = false
+            }
+        }
+    }
+
+  # azurerm_linux_function_app_slot.staging will be created
+  + resource "azurerm_linux_function_app_slot" "staging" {
+      + app_settings                                   = {
+          + "AzureWebJobsStorage"      = (sensitive value)
+          + "FUNCTIONS_WORKER_RUNTIME" = "dotnet"
+        }
+      + builtin_logging_enabled                        = true
+      + client_certificate_enabled                     = false
+      + client_certificate_mode                        = "Optional"
+      + content_share_force_disabled                   = false
+      + custom_domain_verification_id                  = (sensitive value)
+      + daily_memory_time_quota                        = 0
+      + default_hostname                               = (known after apply)
+      + enabled                                        = true
+      + ftp_publish_basic_authentication_enabled       = true
+      + function_app_id                                = (known after apply)
+      + functions_extension_version                    = "~4"
+      + hosting_environment_id                         = (known after apply)
+      + https_only                                     = false
+      + id                                             = (known after apply)
+      + key_vault_reference_identity_id                = (known after apply)
+      + kind                                           = (known after apply)
+      + name                                           = "staging"
+      + outbound_ip_address_list                       = (known after apply)
+      + outbound_ip_addresses                          = (known after apply)
+      + possible_outbound_ip_address_list              = (known after apply)
+      + possible_outbound_ip_addresses                 = (known after apply)
+      + public_network_access_enabled                  = true
+      + site_credential                                = (sensitive value)
+      + storage_account_access_key                     = (sensitive value)
+      + storage_account_name                           = "emailnotionsyncsa"
+      + storage_uses_managed_identity                  = false
+      + virtual_network_backup_restore_enabled         = false
+      + vnet_image_pull_enabled                        = false
+      + webdeploy_publish_basic_authentication_enabled = true
+
+      + identity {
+          + principal_id = (known after apply)
+          + tenant_id    = (known after apply)
+          + type         = "SystemAssigned"
+        }
+
+      + site_config {
+          + always_on                               = (known after apply)
+          + app_scale_limit                         = (known after apply)
+          + container_registry_use_managed_identity = false
+          + default_documents                       = (known after apply)
+          + detailed_error_logging_enabled          = (known after apply)
+          + elastic_instance_minimum                = (known after apply)
+          + ftps_state                              = "Disabled"
+          + health_check_eviction_time_in_min       = 0
+          + http2_enabled                           = false
+          + ip_restriction_default_action           = "Allow"
+          + linux_fx_version                        = (known after apply)
+          + load_balancing_mode                     = "LeastRequests"
+          + managed_pipeline_mode                   = "Integrated"
+          + minimum_tls_version                     = "1.2"
+          + pre_warmed_instance_count               = (known after apply)
+          + remote_debugging_enabled                = false
+          + remote_debugging_version                = (known after apply)
+          + scm_ip_restriction_default_action       = "Allow"
+          + scm_minimum_tls_version                 = "1.2"
+          + scm_type                                = (known after apply)
+          + scm_use_main_ip_restriction             = false
+          + use_32_bit_worker                       = false
+          + vnet_route_all_enabled                  = false
+          + websockets_enabled                      = false
+          + worker_count                            = (known after apply)
+
+          + application_stack {
+              + dotnet_version              = "8.0"
+              + use_dotnet_isolated_runtime = false
+            }
+        }
+    }
+
+  # azurerm_role_assignment.sp_rg_contributor will be created
+  + resource "azurerm_role_assignment" "sp_rg_contributor" {
+      + condition_version                = (known after apply)
+      + id                               = (known after apply)
+      + name                             = (known after apply)
+      + principal_id                     = "/servicePrincipals/64a7beb6-6878-4fef-9233-acf2cfea11d3"
+      + principal_type                   = (known after apply)
+      + role_definition_id               = (known after apply)
+      + role_definition_name             = "Contributor"
+      + scope                            = "/subscriptions/4bf812ab-554d-4a16-8241-578e13632bb3/resourceGroups/email-notion-sync-rg"
+      + skip_service_principal_aad_check = (known after apply)
+    }
+
+  # azurerm_service_plan.main will be created
+  + resource "azurerm_service_plan" "main" {
+      + id                              = (known after apply)
+      + kind                            = (known after apply)
+      + location                        = "eastus2"
+      + maximum_elastic_worker_count    = (known after apply)
+      + name                            = "email-notion-sync-plan"
+      + os_type                         = "Linux"
+      + per_site_scaling_enabled        = false
+      + premium_plan_auto_scale_enabled = false
+      + reserved                        = (known after apply)
+      + resource_group_name             = "email-notion-sync-rg"
+      + sku_name                        = "B1"
+      + worker_count                    = (known after apply)
+    }
+
+Plan: 6 to add, 0 to change, 0 to destroy.
