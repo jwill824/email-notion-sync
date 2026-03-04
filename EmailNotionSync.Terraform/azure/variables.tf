@@ -43,6 +43,29 @@ variable "hcp_sp_object_id" {
   type        = string
 }
 
+# ── Required GitHub Actions secrets ──────────────────────────────────────────
+# The following variables document the GitHub Actions secrets and Terraform
+# Cloud variables that must be configured before CI and Terraform apply can run.
+#
+#  GitHub Actions secrets (repo or org level):
+#    AZURE_CLIENT_ID        — client ID of the OIDC-federated service principal
+#    AZURE_TENANT_ID        — Azure AD tenant ID
+#    AZURE_SUBSCRIPTION_ID  — Azure subscription ID
+#    AZURE_RESOURCE_GROUP   — resource group name (used by deploy workflows)
+#    AZURE_FUNCTIONAPP_NAME — function app name (used by deploy-function-app.yml)
+#    HCP_SP_CLIENT_ID       — client ID of the HCP/Terraform provisioning SP
+#                             (used by the provisioning pre-check workflow)
+#
+#  Terraform Cloud workspace variables (sensitive):
+#    gmail_api_key          — mapped to var.gmail_api_key
+#    notion_api_key         — mapped to var.notion_api_key
+#    hcp_sp_object_id       — mapped to var.hcp_sp_object_id
+#    gmail_api_image        — container image tag for GmailApi
+#    notion_api_image       — container image tag for NotionApi
+#    github_owner           — GitHub owner (e.g. "myorg")
+#    github_repo            — GitHub repo name (e.g. "email-notion-sync")
+# ─────────────────────────────────────────────────────────────────────────────
+
 variable "github_owner" {
   description = "GitHub owner or organization where the container images are hosted"
   type        = string

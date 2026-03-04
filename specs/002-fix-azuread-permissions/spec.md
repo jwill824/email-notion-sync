@@ -5,6 +5,49 @@
 **Status**: Draft  
 **Input**: User description: "Fix azure terraform resource creation issue causing 403 Forbidden on azuread_application: Authorization_RequestDenied: Insufficient privileges to complete the operation."
 
+## Current State (from `terraform plan` run 2026-03-03)
+
+A `terraform plan` was executed against the HCP workspace and produced the following findings:
+
+**Blocking error (must fix before apply succeeds):**
+
+```
+Error: parsing "d5eb67b9-9b04-4688-9a45-6dfdacc40727": parsing the Application ID: the number of segments didn't match
+
+Expected a Application ID that matched (containing 2 segments):
+  /applications/applicationId
+
+However this value was provided (which was parsed into 0 segments):
+  d5eb67b9-9b04-4688-9a45-6dfdacc40727
+
+  with azuread_application_federated_identity_credential.github_actions_credential,
+  on main.tf line 91, in resource "azuread_application_federated_identity_credential":
+  91:   application_id = azuread_application.github_oidc_app.client_id
+```
+
+Root cause: `azuread_application_federated_identity_credential.application_id` requires the OData-style path (`/applications/{objectId}`) returned by `azuread_application.id`, not the bare GUID returned by `azuread_application.client_id`.
+
+**Fix**: change line 91 of `EmailNotionSync.Terraform/azure/main.tf` from:
+```hcl
+application_id = azuread_application.github_oidc_app.client_id
+```
+to:
+```hcl
+application_id = azuread_application.github_oidc_app.id
+```
+
+**Status of original 403 error**: The `azuread_application.github_oidc_app` resource refreshed successfully from state (`id=/applications/600f9303-d545-4c7c-a03f-d538055423ee`), indicating the original Authorization_RequestDenied 403 has already been resolved (the app exists in the tenant).
+
+**Drift detected** on the following resources (non-blocking but should be reviewed):
+- `azurerm_key_vault.main`
+- `azurerm_container_app_environment.main`
+- `azuread_application.github_oidc_app`
+- `azurerm_container_app.gmail_api`
+- `azurerm_container_app.notion_api`
+- `azuread_service_principal.github_oidc_sp`
+- `azurerm_key_vault_secret.gmail_api_key`
+- `azurerm_key_vault_secret.notion_api_key`
+
 ## User Scenarios & Testing *(mandatory)*
 
 <!--
@@ -90,6 +133,8 @@ Operators and maintainers need clear documentation: what permissions are require
 - **FR-005**: The change MUST be covered by an automated integration test or pipeline check that validates successful resource creation in a repeatable staging environment.
 - **FR-006**: The remediation approach WILL be to grant the provisioning identity the required permission to create the Azure AD application (chosen option: grant provisioning identity required permissions). This requires tenant admin approval and a security review; changes will be limited to the provisioning identity used by HCP/Terraform.
 - **FR-007**: The scope of the change WILL be limited to CI/HCP environments initially (chosen option: CI/HCP only). Local developer workflows will remain unchanged unless a separate follow-up change is approved.
+- **FR-008**: `EmailNotionSync.Terraform/azure/main.tf` MUST be corrected so that `azuread_application_federated_identity_credential.github_actions_credential` references `azuread_application.github_oidc_app.id` (the OData path `/applications/{objectId}`) instead of `azuread_application.github_oidc_app.client_id` (bare GUID). This is the immediate blocker for `terraform plan`/`apply` to succeed.
+- **FR-009**: After the Terraform code fix is applied, the operator MUST review and reconcile the drift detected on `azurerm_key_vault`, `azurerm_container_app_environment`, `azuread_application`, `azurerm_container_app.gmail_api`, `azurerm_container_app.notion_api`, `azuread_service_principal`, and both Key Vault secrets. Each drifted resource should either be brought back into Terraform's desired state or have the drift documented and accepted.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -120,11 +165,14 @@ Operators and maintainers need clear documentation: what permissions are require
 
 ## Acceptance Tests / Validation
 
-1. Reproduce the original failure in a staging workspace (capture `terraform apply` logs showing 403 and the resource path `azuread_application.github_oidc_app`).
-2. Apply the remediation (as per selected approach in FR-006) in the staging workspace.
-3. Run `terraform apply` and verify it completes successfully and the `azuread_application` resource exists.
-4. Run the pipeline job 3 times; verify no 403 errors and consistent success.
-5. Confirm runbook and documentation are added to the repo and that a reviewer can follow them to verify permissions.
+1. **[New — highest priority]** Fix `main.tf` line 91: change `application_id = azuread_application.github_oidc_app.client_id` to `application_id = azuread_application.github_oidc_app.id`.
+2. Run `terraform plan` in the HCP workspace and confirm no errors are emitted for `azuread_application_federated_identity_credential.github_actions_credential`.
+3. Reproduce the original failure in a staging workspace (capture `terraform apply` logs showing 403 and the resource path `azuread_application.github_oidc_app`).
+4. Apply the remediation (as per selected approach in FR-006) in the staging workspace.
+5. Run `terraform apply` and verify it completes successfully and the `azuread_application` resource exists.
+6. Run the pipeline job 3 times; verify no 403 errors and consistent success.
+7. Review drift on all 8 drifted resources listed in FR-009 and bring them back to desired state or document accepted divergence.
+8. Confirm runbook and documentation are added to the repo and that a reviewer can follow them to verify permissions.
 
 ## Notes / Implementation Constraints
 

@@ -1,0 +1,66 @@
+name: Terraform Infrastructure Pre-check
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'EmailNotionSync.Terraform/azure/**'
+      - '.github/workflows/terraform-precheck.yml'
+  pull_request:
+    paths:
+      - 'EmailNotionSync.Terraform/azure/**'
+      - '.github/workflows/terraform-precheck.yml'
+  workflow_dispatch:
+
+# HCP Terraform uses a VCS-driven workflow and triggers its own plan/apply when
+# code is pushed to the connected branch.  This workflow runs a pre-check that
+# validates the provisioning identity has the required Azure AD role BEFORE the
+# HCP apply can proceed, giving operators early warning if permissions are missing.
+
+permissions:
+  id-token: write  # required for OIDC login to Azure
+  contents: read
+
+jobs:
+  provisioning-precheck:
+    name: Validate Provisioning Identity Permissions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Run provisioning permissions pre-check
+        env:
+          PROVISIONING_PRINCIPAL_CLIENT_ID: ${{ secrets.HCP_SP_CLIENT_ID }}
+        run: |
+          bash specs/002-fix-azuread-permissions/checks/check_provisioning_perms.sh \
+            | tee /tmp/precheck.log
+          EXIT_CODE=${PIPESTATUS[0]}
+          echo "## Provisioning Pre-check Log" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat /tmp/precheck.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          exit $EXIT_CODE
+
+      - name: Verify Azure AD application exists (post-apply audit)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          OIDC_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        run: |
+          echo "## Azure AD Application Verification" >> $GITHUB_STEP_SUMMARY
+          APP_INFO=$(az ad app show --id "$OIDC_CLIENT_ID" \
+            --query '{displayName:displayName,appId:appId,id:id}' \
+            --output json 2>/dev/null || echo '{"error":"not found or no access"}')
+          echo '```json' >> $GITHUB_STEP_SUMMARY
+          echo "$APP_INFO" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "Verification timestamp: $(date -u '+%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_STEP_SUMMARY
+

@@ -2,19 +2,50 @@
 
 This document lists tenant-admin steps to grant the provisioning principal the minimal role required to create Azure AD applications.
 
-## Recommended role
+> **Solo-tenant note**: If you created your Azure tenant with a personal Microsoft account, your account is already the **Global Administrator**. You can perform all steps below yourself — no separate approver is needed. To confirm, run:
+> ```bash
+> az rest --method GET \
+>   --uri "https://graph.microsoft.com/v1.0/me/memberOf/microsoft.graph.directoryRole" \
+>   --query "value[].displayName" --output json
+> ```
+> If `"Global Administrator"` appears, proceed as the approver.
+
+## Why this cannot be managed by Terraform
+
+These role assignments are **bootstrap steps**. Terraform authenticates to Azure *as the HCP service principal* (`email-notion-sync-prod-sp`). Until that SP has Application Administrator, Terraform cannot create Azure AD app registrations — which means Terraform cannot grant itself that role either. The initial grant must be done manually by a Global Administrator. After that, Terraform can manage everything else.
+
+## Required role
 
 - **Application Administrator** — allows creating and managing app registrations and service principals.
+- Do **not** assign Global Administrator; it is far broader than needed.
 
-## Portal (manual) steps
+## Current status (as of this spec)
+
+The HCP service principal (`email-notion-sync-prod-sp`, object ID `eb22353c-c007-4736-b1cf-78024d946b57`) was found with **Global Administrator** assigned — more than required. The steps below correct this to least-privilege:
+
+1. ✅ Application Administrator has been assigned (T008 complete)
+2. ✅ Global Administrator has been removed (least-privilege confirmed)
+
+## Portal steps: assign Application Administrator
 
 1. Sign in to the Azure Portal as a tenant administrator.
 2. Navigate to **Azure Active Directory** → **Roles and administrators**.
 3. Search for **Application Administrator** and open the role.
-4. Click **Add assignment** → search for the provisioning principal (service principal name or display name) → select → **Add**.
-5. Record the approval ticket/PR number and the timestamp; capture Azure AD Audit Log entry for the assignment.
+4. Click **Add assignment** → search for `email-notion-sync-prod-sp` → select → **Add**.
+5. Record the approval ticket/PR number and timestamp; capture Azure AD Audit Log entry.
 
-## PowerShell (scripted) steps
+## Portal steps: remove Global Administrator (scoping down)
+
+> Perform this **after** verifying Application Administrator is assigned.
+
+1. Sign in to the Azure Portal as a tenant administrator.
+2. Navigate to **Azure Active Directory** → **Roles and administrators**.
+3. Search for **Global Administrator** and open the role.
+4. Find `email-notion-sync-prod-sp` in the members list.
+5. Select it → click **Remove assignment** → confirm.
+6. Capture the Audit Log entry for the removal.
+
+## PowerShell steps (alternative to Portal)
 
 Run these as a tenant admin with Microsoft Graph PowerShell module installed.
 
@@ -22,25 +53,28 @@ Run these as a tenant admin with Microsoft Graph PowerShell module installed.
 Install-Module Microsoft.Graph -Scope CurrentUser
 Connect-MgGraph -Scopes Directory.ReadWrite.All
 
-# Find the Directory Role
-$role = Get-MgDirectoryRole | Where-Object { $_.displayName -eq 'Application Administrator' }
+$spObjectId = "eb22353c-c007-4736-b1cf-78024d946b57"
 
-# Find service principal object id for the provisioning principal (replace <clientId>)
-$sp = Get-MgServicePrincipal -Filter "appId eq '<clientId>'"
+# Add Application Administrator
+$aaRole = Get-MgDirectoryRole | Where-Object { $_.DisplayName -eq 'Application Administrator' }
+Add-MgDirectoryRoleMember -DirectoryRoleId $aaRole.Id `
+  -BodyParameter @{ "@odata.id" = "https://graph.microsoft.com/v1.0/directoryObjects/$spObjectId" }
 
-# Add the service principal to the role
-Add-MgDirectoryRoleMember -DirectoryRoleId $role.Id -BodyParameter @{ "@odata.id" = "https://graph.microsoft.com/v1.0/directoryObjects/$($sp.Id)" }
+# Remove Global Administrator
+$gaRole = Get-MgDirectoryRole | Where-Object { $_.DisplayName -eq 'Global Administrator' }
+Remove-MgDirectoryRoleMember -DirectoryRoleId $gaRole.Id -DirectoryObjectId $spObjectId
 ```
 
 ## Verification
 
-- Confirm the role assignment is visible in Azure Portal under the role members list.
-- Check Azure AD audit logs for the assignment action and record the evidence in the PR.
+- Confirm Application Administrator is visible in Azure Portal under the role members list.
+- Confirm Global Administrator no longer lists `email-notion-sync-prod-sp`.
+- Check Azure AD audit logs for both the assignment and removal actions.
 
 ## Rollback
 
-- To remove the assignment, use the Portal UI or PowerShell `Remove-MgDirectoryRoleMember` with the same parameters.
+To restore the previous state (not recommended): assign Global Administrator again via the Portal or `Add-MgDirectoryRoleMember`.
 
 ## Governance note
 
-- Assignments must be least-privilege and temporary where possible. Record the reason, approver, and expected expiry in the PR.
+Assignments must be least-privilege. Record the reason, approver, and date in the PR. For solo tenants, "approver = account owner" is acceptable — document it explicitly.
